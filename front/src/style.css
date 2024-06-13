@@ -1,0 +1,258 @@
+/* ____________________POLICES____________________*/
+@font-face {
+  font-family: "Andika";
+  src: url(/src/assets/andika_basic/AndBasR.ttf);
+}
+
+@font-face {
+  font-family: "Peach-cake";
+  src: url(/src/assets/peach_cake/Peach\ Cake.otf);
+}
+
+#app{
+  font-family: "Andika";
+}
+
+.peach-cake{
+  font-family: "Peach-cake";
+}
+
+/*_____________________WIDTH______________________*/
+
+.w50{
+  width: 50%;
+}
+
+.w60{
+  width: 60%;
+}
+
+.w70{
+  width: 70%;
+}
+
+.w80{
+  width: 80%;
+}
+
+.w90{
+  width: 90%;
+}
+
+
+/*____________________SPACERS_____________________*/
+
+.spacer{
+  height: 70px;
+}
+
+.spacer-mini{
+  height: 30px;
+}
+
+/*____________________BUTTONS_____________________*/
+
+.btn-outline-primary{
+  border-color: #2FC6B0 !important;
+  color: #2FC6B0 !important;
+}
+
+.btn-outline-primary:hover{
+  background-color: #36e9ce !important;
+  color: #FCFAEE !important;
+}
+
+.btn-primary{
+  border-color: #2FC6B0 !important;
+  background-color: #2FC6B0 !important;
+  color: #FCFAEE !important;
+}
+
+.btn-primary:hover{
+  background-color: #229281 !important;
+}
+
+/*___________________FONT-SIZE____________________*/
+
+h2{
+  font-size: 24px !important;
+}
+
+p{
+  font-size: 14px;
+}
+
+/*____________________POSITION____________________*/
+
+.relative{
+  position: relative;
+}
+
+.absolute{
+  position: absolute;
+}
+
+/* _______________BACKGROUND COLORS_______________*/
+
+#app{
+  background-color: #FCFAEE;
+}
+
+.bg-lightblue{
+  background-color: #2FC6B0;
+}
+
+.bg-blue{
+  background-color: #585c7c;
+}
+
+.bg-darkblue{
+  background-color: #3A4369;
+}
+
+.bg-pink{
+  background-color: #CE1483;
+}
+
+/*___________________TEXT COLORS__________________*/
+
+header .nav-link, footer .nav-link {
+  color: #FCFAEE;
+}
+
+.light{
+  color: #FCFAEE;
+}
+
+/*______________________BORDER____________________*/
+
+.border-dark{
+  border: 1px solid #131416;
+}
+
+@media (min-width: 768px){
+  .listeActuelle{
+    border-left: 1px solid #131416;
+  }  
+}
+
+.blue-shadow{
+  box-shadow: 10px 10px #2FC6B0;
+}
+
+/*_______________________IMAGES___________________*/
+
+.outingPP{
+  width: 60px;
+  height: 60px;
+}
+
+.icons img{
+  width: 20px;
+  height: 20px;
+  margin: 2px;
+}
+
+
+/* _____________________HEADER____________________*/
+
+header {
+  background-color: #3A4369;
+}
+
+.header-title{
+  font-size: 4em;
+}
+
+.logo-header, .logo-header:active, .logo-header:visited, .logo-header:hover {
+  text-decoration: none;
+  color: #2FC6B0;
+}
+
+.logo-header{
+  display: flex;
+}
+
+.navbar-collapse{
+  width: auto;
+}
+
+/* Style de base pour la barre de recherche et le filtre déroulant */
+.search-container {
+  justify-content: center;
+  align-items: center;
+}
+
+.search-container>p{
+  padding-bottom: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+/* Style pour la zone de recherche */
+#searchInput {
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 0 4px 4px 0;
+  box-sizing: border-box;
+}
+
+.search-container>p::after{
+  content: url('/src/assets/loupe.png');
+  position: relative;
+  right: -260px;
+  top: 2px;
+  width: 25px;
+  height: 25px;
+}
+
+/* Style pour le filtre déroulant */
+.filter-container {
+  margin-left: -1px; /* Ajustement pour aligner les bordures du filtre avec la zone de recherche */
+}
+
+#filterOptions {
+  padding: 6px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+/* Style pour le survol du filtre déroulant */
+#filterOptions:hover {
+  background-color: #f1f1f1;
+}
+
+
+/*_________________LISTE SORTIES_________________*/
+
+
+
+/*______________________DECO_____________________*/
+
+
+.bg-pink>h2{
+  margin-left: -140px;
+  z-index: 3;
+}
+
+.pinkSquare{
+  margin-left: -20px;
+  z-index: 1;
+}
+
+.img-deco{
+  z-index: 2;
+}
+
+
+
+
+/* ____________________FOOTER_____________________*/
+
+footer {
+  background-color: #2FC6B0;
+}
