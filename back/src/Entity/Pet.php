@@ -18,10 +18,13 @@ class Pet
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $age = null;
+    #[ORM\Column(length: 255)]
+    private ?string $age = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\ManyToOne(inversedBy: 'pets')]
+    private ?Users $owner = null;
+
+    #[ORM\ManyToOne]
     private ?Breed $breed = null;
 
     public function getId(): ?int
@@ -41,14 +44,26 @@ class Pet
         return $this;
     }
 
-    public function getAge(): ?\DateTimeInterface
+    public function getAge(): ?string
     {
         return $this->age;
     }
 
-    public function setAge(?\DateTimeInterface $age): static
+    public function setAge(?string $age): static
     {
         $this->age = $age;
+
+        return $this;
+    }
+
+    public function getOwner(): ?Users
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?Users $owner): static
+    {
+        $this->owner = $owner;
 
         return $this;
     }
