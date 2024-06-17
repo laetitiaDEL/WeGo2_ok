@@ -22,7 +22,7 @@ class Pet
     private ?string $age = null;
 
     #[ORM\ManyToOne(inversedBy: 'pets')]
-    private ?Users $owner = null;
+    private ?User $owner = null;
 
     #[ORM\ManyToOne]
     private ?Breed $breed = null;
@@ -56,12 +56,12 @@ class Pet
         return $this;
     }
 
-    public function getOwner(): ?Users
+    public function getOwner(): ?User
     {
         return $this->owner;
     }
 
-    public function setOwner(?Users $owner): static
+    public function setOwner(?User $owner): static
     {
         $this->owner = $owner;
 

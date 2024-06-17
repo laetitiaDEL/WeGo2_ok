@@ -8,10 +8,10 @@ return [
     'app_breed' => [[], ['_controller' => 'App\\Controller\\BreedController::index'], [], [['text', '/breed']], [], [], []],
     'app_outing' => [[], ['_controller' => 'App\\Controller\\OutingController::index'], [], [['text', '/outing']], [], [], []],
     'app_pet' => [[], ['_controller' => 'App\\Controller\\PetController::index'], [], [['text', '/pet']], [], [], []],
-    'app_users' => [[], ['_controller' => 'App\\Controller\\UsersController::index'], [], [['text', '/users']], [], [], []],
+    'app_users' => [[], ['_controller' => 'App\\Controller\\UserController::index'], [], [['text', '/users']], [], [], []],
     'App\Controller\ActivityController::index' => [[], ['_controller' => 'App\\Controller\\ActivityController::index'], [], [['text', '/activity']], [], [], []],
     'App\Controller\BreedController::index' => [[], ['_controller' => 'App\\Controller\\BreedController::index'], [], [['text', '/breed']], [], [], []],
     'App\Controller\OutingController::index' => [[], ['_controller' => 'App\\Controller\\OutingController::index'], [], [['text', '/outing']], [], [], []],
     'App\Controller\PetController::index' => [[], ['_controller' => 'App\\Controller\\PetController::index'], [], [['text', '/pet']], [], [], []],
-    'App\Controller\UsersController::index' => [[], ['_controller' => 'App\\Controller\\UsersController::index'], [], [['text', '/users']], [], [], []],
+    'App\Controller\UserController::index' => [[], ['_controller' => 'App\\Controller\\UserController::index'], [], [['text', '/users']], [], [], []],
 ];

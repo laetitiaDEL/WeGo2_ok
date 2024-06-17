@@ -1,4 +1,5 @@
 <template> 
+{{  console.log(allUsers) }}
         <div class="container-fluid">
             <div class="row w80">
                 <div class="col-12 p-0 relative listParent">

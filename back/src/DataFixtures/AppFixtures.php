@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Users;
+use App\Entity\User;
 use App\Entity\Breed;
 use App\Entity\Pet;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -21,10 +21,10 @@ class AppFixtures extends Fixture
 
         //Boucle qui va itérer 100 utilisateurs factices
         for($i=0; $i<100; $i++){
-            $user = new Users();
+            $user = new User();
             //génération d'un utilisateur factice
             $user->setName($faker->name());
-            $user->setMail($faker->email());
+            $user->setEmail($faker->email());
             $user->setPassword($faker->password());
             $manager->persist($user);
 
@@ -38,7 +38,7 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
-    private function setPets(Users $user, ObjectManager $manager){
+    private function setPets(User $user, ObjectManager $manager){
 
         $faker = Faker\Factory::create('fr_FR');
         $nbPets = rand(0,5);
