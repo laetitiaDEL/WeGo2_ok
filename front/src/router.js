@@ -1,4 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
+
 //! la ƒ° createWebHistory
 //* très commun dans les app SPA (web-mobile-etc...)
 //* Permet de créer un historique de navigation (VUE sait tjrs d'ou vous venez)
@@ -61,6 +62,15 @@ const routes =  [
     const router = createRouter({
     history: createWebHistory(),
     routes,
+    });
+
+    router.beforeResolve(async (to, from, next) => {
+        console.log('guard');
+        if(!localStorage.getItem('token_wego2') && to.path !== '/connexion'){
+            next('/connexion');
+        }else{
+            next();
+        }
     });
     
     export default router;

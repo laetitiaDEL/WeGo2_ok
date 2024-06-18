@@ -12,9 +12,12 @@ return [
         '/breed' => [[['_route' => 'app_breed', '_controller' => 'App\\Controller\\BreedController::index'], null, null, null, false, false, null]],
         '/outing' => [[['_route' => 'app_outing', '_controller' => 'App\\Controller\\OutingController::index'], null, null, null, false, false, null]],
         '/pet' => [[['_route' => 'app_pet', '_controller' => 'App\\Controller\\PetController::index'], null, null, null, false, false, null]],
+        '/login' => [[['_route' => 'app_login', '_controller' => 'App\\Controller\\SecurityController::login'], null, null, null, false, false, null]],
+        '/logout' => [[['_route' => 'app_logout', '_controller' => 'App\\Controller\\SecurityController::logout'], null, null, null, false, false, null]],
         '/users' => [[['_route' => 'app_users', '_controller' => 'App\\Controller\\UserController::index'], null, ['GET' => 0], null, false, false, null]],
         '/api/gettoken' => [[['_route' => 'app_api_gettoken', '_controller' => 'App\\Controller\\UserController::getToken'], null, null, null, false, false, null]],
-        '/api/veriftoken' => [[['_route' => 'app_api_veriftoken', '_controller' => 'App\\Controller\\UserController::testToken'], null, null, null, false, false, null]],
+        '/api/veriftoken' => [[['_route' => 'app_api_veriftoken', '_controller' => 'App\\Controller\\UserController::verifApiToken'], null, null, null, false, false, null]],
+        '/add/user' => [[['_route' => 'app_add_test', '_controller' => 'App\\Controller\\UserController::add'], null, ['POST' => 0], null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'

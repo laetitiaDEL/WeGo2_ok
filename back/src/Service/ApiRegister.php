@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Service;
+
 use App\Repository\UserRepository;
 use App\Service\Utils;
 use Firebase\JWT\JWT;
@@ -7,6 +9,12 @@ use Firebase\JWT\Key;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
     class ApiRegister{
+
+        private string $token;
+
+        public function __construct(string $token){
+            $this->token = $token;
+        }
 
         public function authentification(UserPasswordHasherInterface $userPasswordHasherInterface, UserRepository $userRepository, $mail, $password){
             //nettoyer les info 
@@ -25,8 +33,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
             }
         }
 
-        public function genToken($mail, UserRepository $userRepository, $key){
-            require_once('../vendor/autoload.php');
+        public function genToken($mail, UserRepository $userRepository){
+            //require_once('../vendor/autoload.php');
             //variables token
             $created_at = new \DateTimeImmutable();
             $expire = $created_at->modify('+60 minutes')->getTimestamp();
@@ -44,20 +52,21 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
             ];
             $token = JWT::encode(
                 $payload,
-                $key,
+                $this->token,
                 'HS512'
             );
             return $token;
 
         }
 
-        public function verifyToken($jwt, $key){
-            require_once('../vendor/autoload.php');
+
+        public function verifyToken($jwt){
             try {
-                $token = JWT::decode($jwt, new Key($key, 'HS512'));
+                //Décodage du token
+                $token = JWT::decode($jwt, new Key($this->token, 'HS512'));
                 return true;
-            }
-            catch (\Throwable $th){
+            } 
+            catch (\Throwable $th) {
                 return $th->getMessage();
             }
         }

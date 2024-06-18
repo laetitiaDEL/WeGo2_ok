@@ -18,24 +18,28 @@ use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 
 class UserController extends AbstractController
 {
+    private ApiRegister $apiRegister;
+
+    public function __construct(ApiRegister $apiRegister){
+        $this->apiRegister = $apiRegister;
+    }
     #[Route('/users', name: 'app_users', methods: 'GET')]
     public function index(UserRepository $userRepository, NormalizerInterface $normalizer): Response
     {
         $users = $userRepository->findAll();
-        $usersNormalize = $normalizer->normalize($users);
-        return $this->json($usersNormalize);
+        return $this->json($users,200,['Content-Type'=>'application/json', 'Access-Control-Allow-Origin'=>'*'],['groups' => 'users']);
     }
 
     #[Route('/api/gettoken', name: 'app_api_gettoken')]
     //to get the token
-    public function getToken(Request $req, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasherInterface, ApiRegister $apiRegister){
+    public function getToken(Request $req, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasherInterface): Response{
         //get user mail and pwd + key
         $mail = $req->query->get('email');
         $password = $req->query->get('password');
         $key = $this->getParameter('token');
         if($mail && $password){
-            if($apiRegister->authentification($userPasswordHasherInterface, $userRepository, $mail, $password)){
-                $token = $apiRegister->genToken($mail, $userRepository, $key);
+            if($this->apiRegister->authentification($userPasswordHasherInterface, $userRepository, $mail, $password)){
+                $token = $this->apiRegister->genToken($mail, $userRepository, $key);
                 return $this->json(['token'=>$token],200,['Content-Type'=>'application/json', 'Access-Control-Allow-Origin'=>'*']);
             }else{
                 return $this->json(['error'=> 'Les identifiants ne correspondent pas.'],401,
@@ -46,19 +50,34 @@ class UserController extends AbstractController
         }
     }
 
-    #[Route('/api/veriftoken', name: 'app_api_veriftoken')]
-    //check if token empty
-    public function testToken(ApiRegister $apiRegister, Request $req){
-        //get token without Bearer (7 fisrt chars)
-        $token = substr($req->server->get('HTTP_AUTHORIZATION'),7);
-        //get encryption key
-        $key = $this->getParameter('token');
-        if($apiRegister->verifyToken($token, $key)){
-            return $this->json([['error'=> 'Accés authorisé'],200,
-            ['Content-Type'=>'application/json', 'Access-Control-Allow-Origin'=>'*']]);
-        }else{
-            return $this->json(['error'=>$apiRegister->verifyToken($token, $key)], 401,
+    #[Route('/api/veriftoken', name:'app_api_veriftoken')]
+    public function verifApiToken(Request $request): Response{
+        $jwt = substr($request->server->get('HTTP_AUTHORIZATION'),7);
+        $verif = $this->apiRegister->verifyToken($jwt);  
+        if($verif!==true){
+            return $this->json(['error'=>$verif], 401,
             ['Content-Type'=>'application/json', 'Access-Control-Allow-Origin'=>'*']);
         }
+        else{
+            return $this->json(['error'=> 'Accès authorisé'],200,
+            ['Content-Type'=>'application/json', 'Access-Control-Allow-Origin'=>'*']);
+        }
+    }
+
+    #[Route('/add/user', name: 'app_add_test', methods: 'POST')]
+    public function add(Request $req, UserRepository $userRepository, 
+    UserPasswordHasherInterface $userPasswordHasherInterface, SerializerInterface $serializerInterface, EntityManagerInterface $entityManagerInterface): Response{
+        $json = $req->getContent();
+        if($json){
+            $data = $serializerInterface->decode($json, 'json');
+            $user = new User();
+            $user->setName($data['name']);
+            $user->setEmail($data['email']);
+            $user->setPassword($userPasswordHasherInterface->hashPassword($user, $data['password']));
+            $entityManagerInterface->persist($user);
+            $entityManagerInterface->flush();
+            return $this->json($user, 200, ['Content-Type'=>'application/json', 'Access-Control-Allow-Origin'=>'*'], ['groups' => 'users']);
+        }
+        return $this->json(['error' => 'Informations incorrectes.'], 401, ['Content-Type'=>'application/json', 'Access-Control-Allow-Origin'=>'*']);
     }
 }

@@ -20,17 +20,17 @@
                                         <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Connexion</h5>
 
                                         <div class="form-outline mb-4">
-                                            <input v-model="email" type="email" id="form2Example17" class="form-control form-control-lg" />
-                                            <label class="form-label" for="form2Example17">Email</label>
+                                            <input v-model="email" type="email" id="email" class="form-control form-control-lg" />
+                                            <label class="form-label" for="email">Email</label>
                                         </div>
 
                                         <div class="form-outline mb-4">
-                                            <input v-model="password" type="password" id="form2Example27" class="form-control form-control-lg" />
-                                            <label class="form-label" for="form2Example27">Mot de passe</label>
+                                            <input v-model="password" type="password" id="password" class="form-control form-control-lg" />
+                                            <label class="form-label" for="password">Mot de passe</label>
                                         </div>
 
                                         <div class="pt-1 mb-4">
-                                            <button v-on:click="signIn" class="btn btn-dark btn-lg btn-block" type="button">Entrer</button>
+                                            <button class="btn btn-dark btn-lg btn-block" type="button" @click="logIn">Entrer</button>
                                         </div>
 
                                         <a class="small text-muted" href="#!">Mot de passe oublié ?</a>
@@ -50,4 +50,30 @@
 
 <script>
 import router from '../router';
+export default {
+    data() {
+        return {
+            email: "",
+            password: ""
+        };
+    },
+    methods: {
+        logIn(){
+            fetch("https://127.0.0.1:8000/api/gettoken?email="+this.email+"&password="+this.password)
+                .then(async response =>{
+                    const data = await response.json();
+                    if(!response.ok){
+                        const error = (data && data.message) || response.statusText;
+                        return Promise.reject(error);
+                    }
+                    localStorage.setItem("token_WeGo2", data.token);
+                    router.push({path: 'home'});
+                })
+                .catch(error => {
+                    this.errorMessage = error;
+                    console.error("There was an error !", error);
+                });
+        }
+    }
+}
 </script>
