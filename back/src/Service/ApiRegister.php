@@ -18,8 +18,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
         public function authentification(UserPasswordHasherInterface $userPasswordHasherInterface, UserRepository $userRepository, $mail, $password){
             //nettoyer les info 
-            $mail = Utils::cleanInputStatic($mail);
-            $password = Utils::cleanInputStatic($password);
+            $mail = Utils::cleanInput($mail);
+            $password = Utils::cleanInput($password);
             //récupérer le compte par son mail
             $user = $userRepository->findOneByEmail($mail);
             if($user){
@@ -64,7 +64,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
             try {
                 //Décodage du token
                 $token = JWT::decode($jwt, new Key($this->token, 'HS512'));
-                return true;
+                return $token;
             } 
             catch (\Throwable $th) {
                 return $th->getMessage();

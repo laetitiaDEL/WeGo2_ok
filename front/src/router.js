@@ -1,4 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
+import tokenGuard from "./services/TokenGuardService";
 
 //! la ƒ° createWebHistory
 //* très commun dans les app SPA (web-mobile-etc...)
@@ -10,7 +11,8 @@ const routes =  [
     {
         path: "/",
         component: () => import("./components/Home.vue"),
-        alias: '/home'
+        alias: '/home',
+        beforeEnter: tokenGuard 
     },
     {
         path: "/connexion",
@@ -19,18 +21,22 @@ const routes =  [
     {
         path: "/history",
         component: () => import("./components/History.vue"),
+        beforeEnter: tokenGuard 
     },
     {
         path: "/settings",
         component: () => import("./components/Settings.vue"),
+        beforeEnter: tokenGuard 
     },
     {
         path: "/createOuting",
         component: () => import("./components/CreateOuting.vue"),
+        beforeEnter: tokenGuard
     },
     {
         path: "/messaging",
         component: () => import("./components/Messaging.vue"),
+        beforeEnter: tokenGuard 
     },
     {
         path: "/terms",
@@ -43,10 +49,13 @@ const routes =  [
     {
         path: "/contact",
         component: () => import("./components/Contact.vue"),
+        beforeEnter: tokenGuard 
     },
     {
         path: "/myAccount",
         component: () => import("./components/MyAccount.vue"),
+        beforeEnter: tokenGuard 
+
     },
     {
         path: "/users",
@@ -64,14 +73,14 @@ const routes =  [
     routes,
     });
 
-    router.beforeResolve(async (to, from, next) => {
-        console.log('guard');
-        if(!localStorage.getItem('token_wego2') && to.path !== '/connexion'){
-            next('/connexion');
-        }else{
-            next();
-        }
-    });
+    // router.beforeResolve(async (to, from, next) => {
+    //     console.log('guard');
+    //     if(!localStorage.getItem('token_wego2') && to.path !== '/connexion'){
+    //         next('/connexion');
+    //     }else{
+    //         next();
+    //     }
+    // });
     
     export default router;
 

@@ -1,5 +1,5 @@
 <template>
-     <div class="p-5">
+    <div class="p-5">
         <h2 class="peach-cake text-center">Créer une sortie</h2>
         <div class="spacer-mini"></div>
         <article>
@@ -26,28 +26,26 @@
                     v-for="(field, index) in formGroup[formPosition].fields"
                     :key="'field'+index"
                     >
-                        <input :type=field.type :name=field.name v-model="field.value">
+                        <input :type=field.type :name=field.name v-model="field.value" :required="field.name == date ? true : false">
                         <label>{{ field.label }}</label>
                     </div>
                 </div>
             
                 <div>
                     <button
-                        v-if="formPosition > 0"      @click="previousStep">
+                        v-if="formPosition > 0"      @click.prevent="previousStep">
                         Précédent
                     </button>
                     <button
-                        v-if="formPosition < formGroup.length -1"      @click="nextStep">
+                        v-if="formPosition < formGroup.length -1"      @click.prevent="nextStep">
                         Suivant
                     </button>
 
                     <button
-                        v-if="formPosition === formGroup.length -1">
+                        v-if="formPosition === formGroup.length -1" @click="addOuting">
                         Valider
                     </button>
-
                 </div>
-
             </section>
         </article>
     </div>
@@ -57,57 +55,159 @@
 import router from '../router';
 export default {
     data: () => {
-    return {
+        return {
             formPosition: 0,
             animation: 'animate-in',
+            activities: "",
+            activity: "",
+            userId: "",
+            outing: "",
+            
             formGroup: [
-            {title: "Quand ?",
+                {title: "Quand ?",
                 fields: [
-                {label: "Maintenant", type: "radio", name:"when", value: "now" },
-                {label: "Plus tard", type: "radio", name:"when", value: "later"},
-                {label: "", type: "datetime-local", name:"", value: ""},]},
-            {title: "Quoi ?",
-                fields: [
-                    
-                ]},
-            {title: "Où ?",
-                fields: [
-                {label: "Utiliser ma position", type: "radio", name:"where", value: "here" }
-            ]},
-            {title: "Préférences",
+                    {label: "Maintenant ou plus tard ?", type: "datetime-local", name:"date", value: ""},
+                    ]
+                },
+                {title: "Quoi ?",
+                fields: []
+                },
+                {title: "Où ?",
                 fields: [
 
-                ]},
-            {title: "Valider",
-                fields: []},
-            ]}},
+                    ]
+                },
+                {title: "Préférences",
+                fields: [
+
+                    ]
+                },
+                {title: "Valider",
+                fields: [
+
+                    ]
+                },
+            ]
+        }
+    },
 
     methods: {
         setStep(step){
-        this.animation = 'animate-out';
-        setTimeout(() => {
-        this.animation = 'animate-in';
-        this.formPosition = step;
-        }, 600);
+            this.animation = 'animate-out';
+            setTimeout(() => {
+                this.animation = 'animate-in';
+                this.formPosition = step;
+            }, 600);
         },
 
         previousStep(){
-        this.animation = 'animate-out';
-        setTimeout(() => {
-        this.animation = 'animate-in';
-        this.formPosition -= 1;
-        }, 600);
+            this.animation = 'animate-out';
+            setTimeout(() => {
+                this.animation = 'animate-in';
+                this.formPosition -= 1;
+            }, 600);
         },
 
         nextStep(){
-        this.animation = 'animate-out';
-        setTimeout(() => {
-        this.animation = 'animate-in';
-        this.formPosition += 1;
-        }, 600);
+            this.animation = 'animate-out';
+            setTimeout(() => {
+                this.animation = 'animate-in';
+                this.formPosition += 1;
+            }, 600);
         },
+
+        addOuting(){
+            this.formGroup[1].fields.forEach(activityInput => {
+                if(activityInput.value === "on"){
+                    this.activity = activityInput.id;
+                }
+            });
+            this.outing = {
+                "date": this.formGroup[0].fields[0].value,
+                "user": this.userId,
+                "activity": this.activity
+            };
+
+            fetch('https://localhost:8000/add/outing', {
+                method: "POST",
+                body: JSON.stringify(this.outing)
+            })
+                .then(async response =>{
+                    const data = await response.json();
+                    if(!response.ok){
+                        const error = (data && data.message) || response.statusText;
+                        return Promise.reject(error);
+                    }
+                    console.log(data);
+                })
+                .catch(error=>{
+                    console.error("There was an error !", error);
+                })
+        }
     },
 
+    beforeCreate(){
+        fetch('https://127.0.0.1:8000/api/veriftoken', {
+            headers: {Authorization: "Bearer " + localStorage.getItem('token_WeGo2')}
+        })
+            .then(async response =>{
+                const data = await response.json();
+                if(!response.ok){
+                    const error = (data && data.message) || response.statusText;
+                    localStorage.removeItem('token_WeGo2');
+                    router.push('/connexion');
+                    return Promise.reject(error);
+                }
+                return data;
+            })
+            .catch(error => {
+                console.error("There was an error !", error);
+            });
+    },
+
+    created(){
+        fetch("https://127.0.0.1:8000/activities")
+            .then(async response => {
+                const data = await response.json();
+
+                if(!response.ok){
+                    const error = (data && data.message)  || response.statusText;
+                    return Promise.reject(error);
+                }
+                this.activities = data;
+                this.activities.forEach(activity => {
+                    this.formGroup[1].fields.push({
+                        id: activity.id,
+                        label: activity.name,
+                        type: "radio",
+                        name: "activity",
+                        value: ""
+                    })
+                });
+            })
+            .catch(error => {
+                this.errorMessage = error;
+                console.error("There was an error !", error);
+            });
+
+        fetch('https://127.0.0.1:8000/api/veriftoken', {
+            headers: {Authorization: "Bearer " + localStorage.getItem('token_WeGo2')}
+        })
+            .then(async response =>{
+                const data = await response.json();
+                if(!response.ok){
+                    const error = (data && data.message) || response.statusText;
+                    localStorage.removeItem('token_WeGo2');
+                    router.push('/connexion');
+                    return Promise.reject(error);
+                }
+                this.userId = data.token.userId;
+            })
+            .catch(error => {
+                this.errorMessage = error;
+                console.error("There was an error !", error);
+            });
+    },
 }
 
 </script>

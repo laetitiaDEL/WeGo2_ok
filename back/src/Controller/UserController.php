@@ -50,18 +50,24 @@ class UserController extends AbstractController
         }
     }
 
-    #[Route('/api/veriftoken', name:'app_api_veriftoken')]
-    public function verifApiToken(Request $request): Response{
-        $jwt = substr($request->server->get('HTTP_AUTHORIZATION'),7);
-        $verif = $this->apiRegister->verifyToken($jwt);  
-        if($verif!==true){
-            return $this->json(['error'=>$verif], 401,
-            ['Content-Type'=>'application/json', 'Access-Control-Allow-Origin'=>'*']);
+    #[Route('/api/veriftoken', name:'app_api_veriftoken', methods: "GET")]
+    public function verifApiToken(Request $request, SerializerInterface $serializerInterface): Response{
+        try {
+            $reqHeader = $serializerInterface->normalize($request->headers, null);
+            $jwt = substr($reqHeader["authorization"][0],7);
+            $verif = $this->apiRegister->verifyToken($jwt); 
+            if($verif->userId > 0){
+                return $this->json(['token'=>$verif], 200,
+                ['Content-Type'=>'application/json', 'Access-Control-Allow-Origin'=>'*']);
+            }
+            else{
+                return $this->json(['error'=> $verif],401,
+                ['Content-Type'=>'application/json', 'Access-Control-Allow-Origin'=>'*']);
+            }
+        }catch(\Exception $e){
+            return $this->json(["error" => $e->getMessage()], 400, ['Content-Type'=>'application/json', 'Access-Control-Allow-Origin'=>'*']);
         }
-        else{
-            return $this->json(['error'=> 'Accès authorisé'],200,
-            ['Content-Type'=>'application/json', 'Access-Control-Allow-Origin'=>'*']);
-        }
+
     }
 
     #[Route('/add/user', name: 'app_add_test', methods: 'POST')]

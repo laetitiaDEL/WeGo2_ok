@@ -1,5 +1,5 @@
 <template>
-    <header>
+    <header v-if="isLoggedIn">
         <nav class="navbar navbar-expand-md p-1">
             <div class="container-fluid d-flex">
                 <router-link to="/" class="logo-header"><img src="../assets/logo.png" alt="Accueil WeGo2" width="100" height="100"><span class="peach-cake header-title">WeGo2</span></router-link>
@@ -13,9 +13,9 @@
                         <router-link to="/createOuting" class="nav-link" href="#">Créer une sortie</router-link>
                         <router-link to="/messaging" class="nav-link" href="#">Messages</router-link>
                         <router-link to="/myAccount" class="nav-link" href="#">Mon compte</router-link>
-                        <div class="position-power-off">
+                        <button @click="logOut" class="position-power-off">
                             <p>Déconnexion</p>
-                        </div>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -32,10 +32,29 @@
             <input type="text" id="searchInput" placeholder="Recherche...">
         </div>
     </header>
+    <div v-else></div>
 </template>
 
-<script setup>
-    import { ref } from 'vue';
-    import router from '../router';
+<script>
+import router from '../router';
 
+export default {
+
+    methods: {
+        logOut(){
+            localStorage.removeItem("token_WeGo2");
+            router.push('/connexion');
+        }
+    },
+
+    computed: {
+        isLoggedIn(){
+            if(!localStorage.getItem("token_WeGo2")){
+                return false;
+            }else{
+                return true;
+            }
+        }
+    }
+}
 </script>

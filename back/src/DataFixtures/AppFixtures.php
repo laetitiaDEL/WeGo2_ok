@@ -5,6 +5,8 @@ namespace App\DataFixtures;
 use App\Entity\User;
 use App\Entity\Breed;
 use App\Entity\Pet;
+use App\Entity\Activity;
+use App\Entity\Outing;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker;
@@ -17,7 +19,21 @@ class AppFixtures extends Fixture
         $users = [];
         $pets = [];
         $breeds = [];
+        $activities =[];
         $faker = Faker\Factory::create('fr_FR');
+
+        //Boucle qui va itérer 25 activités factices
+        for($i=0; $i<25; $i++){
+            $activity = new Activity();
+            //génération d'une activité factice
+            $activity->setName($faker->jobTitle());
+            $manager->persist($activity);
+
+            //stockage dans le manager
+            $manager->persist($activity);
+            $activities[] = $activity;
+        }
+
 
         //Boucle qui va itérer 100 utilisateurs factices
         for($i=0; $i<100; $i++){
@@ -64,7 +80,7 @@ class AppFixtures extends Fixture
 
         $breed = new Breed();
         //génération d'une race factice
-        $breed->setName($faker->jobTitle());
+        $breed->setName($faker->colorName());
         $pet->setBreed($breed);
 
         //stockage dans le manager
