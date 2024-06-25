@@ -9,12 +9,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Service\ApiRegister;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 
 class UserController extends AbstractController
 {
@@ -24,16 +21,15 @@ class UserController extends AbstractController
         $this->apiRegister = $apiRegister;
     }
     #[Route('/users', name: 'app_users', methods: 'GET')]
-    public function index(UserRepository $userRepository, NormalizerInterface $normalizer): Response
+    public function index(UserRepository $userRepository): Response
     {
         $users = $userRepository->findAll();
         return $this->json($users,200,['Content-Type'=>'application/json', 'Access-Control-Allow-Origin'=>'*'],['groups' => 'users']);
     }
 
     #[Route('/api/gettoken', name: 'app_api_gettoken')]
-    //to get the token
     public function getToken(Request $req, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasherInterface): Response{
-        //get user mail and pwd + key
+        //on récupère le mail et le mot de passe
         $mail = $req->query->get('email');
         $password = $req->query->get('password');
         $key = $this->getParameter('token');
@@ -67,11 +63,10 @@ class UserController extends AbstractController
         }catch(\Exception $e){
             return $this->json(["error" => $e->getMessage()], 400, ['Content-Type'=>'application/json', 'Access-Control-Allow-Origin'=>'*']);
         }
-
     }
 
     #[Route('/add/user', name: 'app_add_test', methods: 'POST')]
-    public function add(Request $req, UserRepository $userRepository, 
+    public function add(Request $req, 
     UserPasswordHasherInterface $userPasswordHasherInterface, SerializerInterface $serializerInterface, EntityManagerInterface $entityManagerInterface): Response{
         $json = $req->getContent();
         if($json){

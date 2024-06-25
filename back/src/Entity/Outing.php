@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\OutingRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OutingRepository::class)]
@@ -51,7 +50,6 @@ class Outing
     public function setId(string $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
@@ -63,7 +61,6 @@ class Outing
     public function setDate(?string $date): static
     {
         $this->date = $date;
-
         return $this;
     }
 
@@ -75,7 +72,6 @@ class Outing
     public function setCreator(?User $creator): static
     {
         $this->creator = $creator;
-
         return $this;
     }
 
@@ -92,14 +88,12 @@ class Outing
         if (!$this->members->contains($member)) {
             $this->members->add($member);
         }
-
         return $this;
     }
 
     public function removeMember(User $member): static
     {
         $this->members->removeElement($member);
-
         return $this;
     }
 
@@ -116,14 +110,12 @@ class Outing
         if (!$this->pets->contains($pet)) {
             $this->pets->add($pet);
         }
-
         return $this;
     }
 
     public function removePet(Pet $pet): static
     {
         $this->pets->removeElement($pet);
-
         return $this;
     }
 
@@ -135,7 +127,6 @@ class Outing
     public function setActivity(?Activity $activity): static
     {
         $this->activity = $activity;
-
         return $this;
     }
 }

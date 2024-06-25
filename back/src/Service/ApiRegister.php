@@ -9,9 +9,7 @@ use Firebase\JWT\Key;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
     class ApiRegister{
-
         private string $token;
-
         public function __construct(string $token){
             $this->token = $token;
         }
@@ -56,7 +54,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
                 'HS512'
             );
             return $token;
-
         }
 
 

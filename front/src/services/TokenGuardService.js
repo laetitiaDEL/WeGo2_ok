@@ -8,5 +8,16 @@ const tokenGuard = async (to, from, next) => {
         next('/connexion');
     }
 }
-
 export default tokenGuard;
+
+
+
+
+
+
+
+
+
+
+
+

@@ -18,8 +18,7 @@
                 </div>
             </header>
             <div class="spacer-mini"></div>
-
-            <section :class="animation" class="card w60 m-auto p-3">
+            <form :class="animation" class="card w60 m-auto p-3">
                 <h3>{{ formGroup[formPosition].title }}</h3>
                 <div>
                     <div
@@ -33,7 +32,8 @@
             
                 <div>
                     <button
-                        v-if="formPosition > 0"      @click.prevent="previousStep">
+                        v-if="formPosition > 0"      
+                        @click.prevent="previousStep">
                         Précédent
                     </button>
                     <button
@@ -42,12 +42,16 @@
                     </button>
 
                     <button
-                        v-if="formPosition === formGroup.length -1" @click="addOuting">
+                        v-if="formPosition === formGroup.length -1" 
+                        @click.prevent="addOuting">
                         Valider
                     </button>
                 </div>
-            </section>
+            </form>
         </article>
+        <div v-if="showOverlay" :class="['overlay', overlayClass]">
+            {{ errorMsg }}
+        </div>
     </div>
 </template>
 
@@ -62,6 +66,10 @@ export default {
             activity: "",
             userId: "",
             outing: "",
+            errorMsg: "",
+            statusCode: "",
+            showOverlay: false,
+            overlayClass: "",
             
             formGroup: [
                 {title: "Quand ?",
@@ -70,22 +78,16 @@ export default {
                     ]
                 },
                 {title: "Quoi ?",
-                fields: []
+                fields: []   //alimenté par le fetch
                 },
                 {title: "Où ?",
-                fields: [
-
-                    ]
+                fields: []
                 },
                 {title: "Préférences",
-                fields: [
-
-                    ]
+                fields: []
                 },
                 {title: "Valider",
-                fields: [
-
-                    ]
+                fields: []
                 },
             ]
         }
@@ -128,19 +130,31 @@ export default {
                 "activity": this.activity
             };
 
-            fetch('https://localhost:8000/add/outing', {
+            fetch('https://localhost:8000/outing/add', {
                 method: "POST",
                 body: JSON.stringify(this.outing)
             })
                 .then(async response =>{
                     const data = await response.json();
+                    this.errorMsg = data.error;
+                    this.statusCode = response.status;
                     if(!response.ok){
-                        const error = (data && data.message) || response.statusText;
+                        const error = (data && data.message) || response.statusText ;
                         return Promise.reject(error);
+                    }else{
+                        this.overlayClass = 'success';
                     }
-                    console.log(data);
+                    this.showOverlay = true;
+                    setTimeout(() => {
+                        this.showOverlay = false;
+                    }, 3000);
                 })
                 .catch(error=>{
+                    this.overlayClass = 'error';
+                    this.showOverlay = true;
+                    setTimeout(() => {
+                        this.showOverlay = false;
+                    }, 3000);
                     console.error("There was an error !", error);
                 })
         }
@@ -158,9 +172,11 @@ export default {
                     router.push('/connexion');
                     return Promise.reject(error);
                 }
+                this.userId = data.token.userId;
                 return data;
             })
             .catch(error => {
+                this.errorMsg = error;
                 console.error("There was an error !", error);
             });
     },
@@ -186,25 +202,7 @@ export default {
                 });
             })
             .catch(error => {
-                this.errorMessage = error;
-                console.error("There was an error !", error);
-            });
-
-        fetch('https://127.0.0.1:8000/api/veriftoken', {
-            headers: {Authorization: "Bearer " + localStorage.getItem('token_WeGo2')}
-        })
-            .then(async response =>{
-                const data = await response.json();
-                if(!response.ok){
-                    const error = (data && data.message) || response.statusText;
-                    localStorage.removeItem('token_WeGo2');
-                    router.push('/connexion');
-                    return Promise.reject(error);
-                }
-                this.userId = data.token.userId;
-            })
-            .catch(error => {
-                this.errorMessage = error;
+                this.errorMsg = error;
                 console.error("There was an error !", error);
             });
     },
@@ -213,14 +211,33 @@ export default {
 </script>
 
 <style>
+.overlay {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #fff;
+    z-index: 1000;
+    text-align: center;
+}
+
+.success {
+    background-color: green;
+}
+
+.error {
+    background-color: red;
+}
 
 .animation-in {
-   transform-origin: left;
-   animation: in 0.2s ease-in-out;
+    transform-origin: left;
+    animation: in 0.2s ease-in-out;
 }
 .animation-out {
-   transform-origin: bottom left;
-   animation: out 0.2s ease-in-out;
+    transform-origin: bottom left;
+    animation: out 0.2s ease-in-out;
 }
 
 .step-numbers .active .step-number{

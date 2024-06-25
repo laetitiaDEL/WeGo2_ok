@@ -10,7 +10,7 @@ return [
     [ // $staticRoutes
         '/activities' => [[['_route' => 'app_activities', '_controller' => 'App\\Controller\\ActivityController::index'], null, ['GET' => 0], null, false, false, null]],
         '/breed' => [[['_route' => 'app_breed', '_controller' => 'App\\Controller\\BreedController::index'], null, null, null, false, false, null]],
-        '/add/outing' => [[['_route' => 'app_add_outing', '_controller' => 'App\\Controller\\OutingController::add'], null, ['POST' => 0], null, false, false, null]],
+        '/outing/add' => [[['_route' => 'app_add_outing', '_controller' => 'App\\Controller\\OutingController::add'], null, ['POST' => 0], null, false, false, null]],
         '/pet' => [[['_route' => 'app_pet', '_controller' => 'App\\Controller\\PetController::index'], null, null, null, false, false, null]],
         '/login' => [[['_route' => 'app_login', '_controller' => 'App\\Controller\\SecurityController::login'], null, null, null, false, false, null]],
         '/logout' => [[['_route' => 'app_logout', '_controller' => 'App\\Controller\\SecurityController::logout'], null, null, null, false, false, null]],
